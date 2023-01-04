@@ -21,6 +21,19 @@
 
 #include <stdint.h>
 
+#ifndef BTN_EAST
+#define BTN_EAST 0x131
+#endif
+#ifndef BTN_SOUTH
+#define BTN_SOUTH 0x130
+#endif
+#ifndef BTN_NORTH
+#define BTN_NORTH 0x133
+#endif
+#ifndef BTN_WEST
+#define BTN_WEST 0x134
+#endif
+
 typedef enum {
 	UINPUT_GPAD_TYPE_NES = 0,
 	UINPUT_GPAD_TYPE_SNES = 1,
