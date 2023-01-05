@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
 	int result = 0;
 	int rd, ctr, combo = 0;
 	char keyStates[256];
-  char* evdev = NULL;
+	char* evdev = NULL;
 
 	int detach = 0;
 	int opt;
@@ -67,9 +67,9 @@ int main(int argc, char* argv[]) {
 			case 's':
 				use_syslog = 1;
 				break;
-      case 'e':
-        evdev = optarg;
-        break;
+	  case 'e':
+		evdev = optarg;
+		break;
 			default:
 				fprintf(stderr, "Usage: %s [-d] [-s] [-e eventPath]\n", argv[0]);
 				exit(EXIT_FAILURE);
@@ -304,6 +304,9 @@ int main(int argc, char* argv[]) {
 					break;
 
 				default:
+					/* Pass through unhandled keys to virtual keyboard. */
+					uinput_kbd_write(&uinp_kbd, xarcdev.ev[ctr].code,
+							xarcdev.ev[ctr].value, EV_KEY);
 					break;
 				}
 			}
