@@ -66,7 +66,7 @@ typedef struct key_map_t {
 	   In the hotkey map, this will be the keycode for the associated
 	   hotkey that must be already pressed for the code to be sent.
 	*/
-	char hot_key; 
+	uint8_t hot_key; 
 } key_map_t;
 
 # define KEY_MAP_SIZE 256
@@ -88,7 +88,7 @@ static void send_key(const key_map_t *p_map_entry, uint16_t ev_value)
 	}
 }
 
-static void set_keymap(key_map_t key_map[], uint8_t key, enum dest_type destination, int game_pad_index, uint16_t code, uint16_t value_low, uint16_t value_high, uint16_t evtype, char hot_key)
+static void set_keymap(key_map_t key_map[], uint8_t key, enum dest_type destination, int game_pad_index, uint16_t code, uint16_t value_low, uint16_t value_high, uint16_t evtype, uint8_t hot_key)
 {
     key_map[key].destination = destination;
     key_map[key].game_pad_index = game_pad_index;
@@ -152,7 +152,7 @@ static void initialize_default_keymap(key_map_t key_map[], key_map_t hotkey_map[
 
 int main(int argc, char* argv[]) {
 	int result = 0;
-	int rd, ctr, combo = 0;
+	int rd, ctr, i = 0;
 	char keyStates[KEY_MAP_SIZE];
 	char* evdev = NULL;
 
@@ -184,7 +184,7 @@ int main(int argc, char* argv[]) {
 	   We only require the user to program the hotkey info in one place,
 	   but we want the tables to be consistent so fill this in ourselves.
 	*/
-	for (int i=0; i<KEY_MAP_SIZE; i++) {
+	for (i=0; i<KEY_MAP_SIZE; i++) {
 		if (hotkey_map[i].hot_key != 0) {
 			key_map[i].hot_key = 1;
 		}
