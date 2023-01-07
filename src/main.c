@@ -37,6 +37,7 @@
 #include "uinput_gamepad.h"
 #include "uinput_kbd.h"
 #include "input_xarcade.h"
+#include "key_map.h"
 
 // TODO Extract all magic numbers and collect them as defines in at a central location
 
@@ -52,32 +53,15 @@ int use_syslog = 0;
 static void teardown();
 static void signal_handler(int signum);
 
-typedef struct key_map_t {
-	/* char key, -- defined by position in key_map table */
-	enum dest_type { pass_through, keyboard, game_pad } destination;
-	int game_pad_index; /* ignored for keyboard destination */
-	uint16_t code;		/* code we are going to send*/
-	uint16_t value_low; /* value to send when ev == 0 */
-	uint16_t value_high;/* value to send when ev > 0 */
-	uint16_t evtype;    /* type of event to send */
-
-	/* In the main key map hot_key will be a 0 for normal key,
-	   and a 1 for a hotkey.  This will autofill based on the hotkey map.
-	   In the hotkey map, this will be the keycode for the associated
-	   hotkey that must be already pressed for the code to be sent.
-	*/
-	uint8_t hot_key; 
-} key_map_t;
-
-# define KEY_MAP_SIZE 256
-
 static void send_key(const key_map_t *p_map_entry, uint16_t ev_value)
 {
+    int is_pressed = ev_value > 0;
+
 	if (p_map_entry->destination == game_pad) {
 		uinput_gpad_write(
 			&uinp_gpads[p_map_entry->game_pad_index],
 			p_map_entry->code,
-			ev_value > 0 ? p_map_entry->value_high:p_map_entry->value_low,
+			is_pressed ? p_map_entry->value_high:p_map_entry->value_low,
 			p_map_entry->evtype);
 	} else {
 		uinput_kbd_write(
@@ -88,71 +72,9 @@ static void send_key(const key_map_t *p_map_entry, uint16_t ev_value)
 	}
 }
 
-static void set_keymap(key_map_t key_map[], uint8_t key, enum dest_type destination, int game_pad_index, uint16_t code, uint16_t value_low, uint16_t value_high, uint16_t evtype, uint8_t hot_key)
-{
-    key_map[key].destination = destination;
-    key_map[key].game_pad_index = game_pad_index;
-    key_map[key].code = code;
-    key_map[key].value_high = value_high;
-    key_map[key].value_low = value_low;
-    key_map[key].evtype = evtype;
-    key_map[key].hot_key = hot_key;
-}
-
-static void initialize_default_keymap(key_map_t key_map[], key_map_t hotkey_map[256])
-{
-	memset(key_map, 0, sizeof(key_map_t)*KEY_MAP_SIZE);
-	memset(hotkey_map, 0, sizeof(key_map_t)*KEY_MAP_SIZE);
-
-	/* Player 1 */
-    set_keymap(key_map, KEY_LEFTCTRL, game_pad, 0, BTN_WEST, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_LEFTALT, game_pad, 0, BTN_NORTH, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_SPACE, game_pad, 0, BTN_TL, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_LEFTSHIFT, game_pad, 0, BTN_SOUTH, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_Z, game_pad, 0, BTN_EAST, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_X, game_pad, 0, BTN_TR, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_C, game_pad, 0, BTN_EXTRA, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_3, game_pad, 0, BTN_MODE, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_V, game_pad, 0, BTN_MODE, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_1, game_pad, 0, BTN_START, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_5, game_pad, 0, BTN_SELECT, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_KP4, game_pad, 0, ABS_X, 2, 0, EV_ABS, 0);
-	set_keymap(key_map, KEY_LEFT, game_pad, 0, ABS_X, 2, 0, EV_ABS, 0);
-	set_keymap(key_map, KEY_KP6, game_pad, 0, ABS_X, 2, 4, EV_ABS, 0);
-	set_keymap(key_map, KEY_RIGHT, game_pad, 0, ABS_X, 2, 4, EV_ABS, 0);
-	set_keymap(key_map, KEY_KP8, game_pad, 0, ABS_Y, 2, 0, EV_ABS, 0);
-	set_keymap(key_map, KEY_UP, game_pad, 0, ABS_Y, 2, 0, EV_ABS, 0);
-	set_keymap(key_map, KEY_KP2, game_pad, 0, ABS_Y, 2, 4, EV_ABS, 0);
-	set_keymap(key_map, KEY_DOWN, game_pad, 0, ABS_Y, 2, 4, EV_ABS, 0);
-
-	/* Player 2 */
-	set_keymap(key_map, KEY_A, game_pad, 1, BTN_WEST, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_S, game_pad, 1, BTN_NORTH, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_Q, game_pad, 1, BTN_TL, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_W, game_pad, 1, BTN_SOUTH, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_E, game_pad, 1, BTN_EAST, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_I, game_pad, 1, BTN_EAST, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_LEFTBRACE, game_pad, 1, BTN_TR, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_K, game_pad, 1, BTN_TR, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_RIGHTBRACE, game_pad, 1, BTN_EXTRA, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_J, game_pad, 1, BTN_EXTRA, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_4, game_pad, 1, BTN_MODE, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_L, game_pad, 1, BTN_MODE, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_2, game_pad, 1, BTN_START, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_6, game_pad, 1, BTN_SELECT, 0, 1, EV_KEY, 0);
-	set_keymap(key_map, KEY_D, game_pad, 1, ABS_X, 2, 0, EV_ABS, 0);
-	set_keymap(key_map, KEY_G, game_pad, 1, ABS_X, 2, 4, EV_ABS, 0);
-	set_keymap(key_map, KEY_R, game_pad, 1, ABS_Y, 2, 0, EV_ABS, 0);
-	set_keymap(key_map, KEY_F, game_pad, 1, ABS_Y, 2, 4, EV_ABS, 0);
-
-	/* Hotkeys */
-	set_keymap(hotkey_map, KEY_1, keyboard, 0, KEY_TAB, 0, 1, EV_KEY, KEY_5);
-	set_keymap(hotkey_map, KEY_2, keyboard, 0, KEY_ESC, 0, 1, EV_KEY, KEY_6);
-}
-
 int main(int argc, char* argv[]) {
 	int result = 0;
-	int rd, ctr, i = 0;
+	int rd, ctr;
 	char keyStates[KEY_MAP_SIZE];
 	char* evdev = NULL;
 
@@ -180,19 +102,7 @@ int main(int argc, char* argv[]) {
 	}
 
     initialize_default_keymap(key_map, hotkey_map);
-	/* 
-	   We only require the user to program the hotkey info in one place,
-	   but we want the tables to be consistent so fill this in ourselves.
-	*/
-	for (i=0; i<KEY_MAP_SIZE; i++) {
-		if (hotkey_map[i].hot_key != 0) {
-			key_map[i].hot_key = 1;
-		}
-		if (key_map[i].destination == pass_through) {
-			key_map[i].code = i;
-			key_map[i].evtype = EV_KEY;
-		}
-	}
+    initialize_hotkeys(key_map, hotkey_map);
 
 	SYSLOG(LOG_NOTICE, "Starting.");
 
