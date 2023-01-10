@@ -51,7 +51,6 @@ static void send_key_event(int fd, unsigned int keycode, int keyvalue,
 /* Setup the uinput device */
 int16_t uinput_gpad_open(UINP_GPAD_DEV* const gpad, UINPUT_GPAD_TYPE_E type,
 			 unsigned char number) {
-	int16_t uinp_fd = -1;
 	gpad->fd = open("/dev/uinput", O_WRONLY | O_NDELAY);
 	if (gpad->fd <= 0) {
 		printf("Unable to open /dev/uinput\n");
@@ -101,7 +100,7 @@ int16_t uinput_gpad_open(UINP_GPAD_DEV* const gpad, UINPUT_GPAD_TYPE_E type,
 	send_key_event(gpad->fd, ABS_X, 2, EV_ABS);
 	send_key_event(gpad->fd, ABS_Y, 2, EV_ABS);
 
-	return uinp_fd;
+	return gpad->fd;
 }
 
 int16_t uinput_gpad_close(UINP_GPAD_DEV* const gpad) {

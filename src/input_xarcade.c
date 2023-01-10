@@ -32,7 +32,7 @@ int16_t input_xarcade_open(INP_XARC_DEV* const xdev, INPUT_XARC_TYPE_E type, cha
 	// Check if a device was forced to avoid scanning for an X-Arcade
 	if(evdev) {
 		xdev->fevdev = open(evdev, O_RDONLY);
-		printf("Forced %s\n", evdev);
+		printf("Forced %s, %d\n", evdev, xdev->fevdev);
 	} else {
 		xdev->fevdev = findXarcadeDevice();
 	}

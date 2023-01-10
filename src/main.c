@@ -119,6 +119,7 @@ int main(int argc, char* argv[]) {
 		exit(EXIT_FAILURE);
 	}
 
+	printf("Got exclusive access to Xarcade.\n");
 	SYSLOG(LOG_NOTICE, "Got exclusive access to Xarcade.");
 
 	uinput_gpad_open(&uinp_gpads[0], UINPUT_GPAD_TYPE_XARCADE, 1);
