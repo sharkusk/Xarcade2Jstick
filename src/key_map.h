@@ -30,19 +30,19 @@ typedef struct key_map_t {
 	uint16_t value_high;/* value to send when ev > 0 */
 	uint16_t evtype;    /* type of event to send */
 
-	/* In the main key map hot_key will be a 0 for normal key,
-	   and a 1 for a hotkey.  This will autofill based on the hotkey map.
+	/* In the main key map shift_code will be a 0 for normal key,
+	   and a 1 for a shift_code.  This will autofill based on the shift_code map.
 
-	   In the hotkey map, this will be the keycode for the associated
-	   hotkey that must be already pressed for the code to be sent.
+	   In the shiftkey map, this will be the keycode for the associated
+	   shift_key that must be already pressed for the code to be sent.
 	*/
-	uint8_t hot_key; 
+	uint8_t shift_code; 
 } key_map_t;
 
 # define KEY_MAP_SIZE 256
 
-void set_keymap(key_map_t key_map[], uint8_t key, enum dest_type destination, int game_pad_index, uint16_t code, uint16_t value_low, uint16_t value_high, uint16_t evtype, uint8_t hot_key);
-void initialize_default_keymap(key_map_t key_map[], key_map_t hotkey_map[]);
-void initialize_hotkeys(key_map_t key_map[], key_map_t hotkey_map[]);
+void set_keymap(key_map_t key_map[], uint8_t key, enum dest_type destination, int game_pad_index, uint16_t code, uint16_t value_low, uint16_t value_high, uint16_t evtype, uint8_t shift_code);
+void initialize_default_keymap(key_map_t key_map[], key_map_t shiftkey_map[]);
+void initialize_shiftkeys(key_map_t key_map[], key_map_t shiftkey_map[]);
 
 #endif /* KEY_MAP_H */

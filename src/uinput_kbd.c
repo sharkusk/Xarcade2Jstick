@@ -54,7 +54,7 @@ int16_t uinput_kbd_open(UINP_KBD_DEV* const kbd) {
 	/* Create input device into input sub-system */
 	write(kbd->fd, &uinp, sizeof(uinp));
 	if (ioctl(kbd->fd, UI_DEV_CREATE)) {
-		printf("[SNESDev-Rpi] Unable to create UINPUT device.");
+		printf("[SNESDev-Rpi] Unable to create UINPUT device.\n");
 		return -1;
 	}
 

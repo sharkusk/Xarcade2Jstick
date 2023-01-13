@@ -93,7 +93,7 @@ int16_t uinput_gpad_open(UINP_GPAD_DEV* const gpad, UINPUT_GPAD_TYPE_E type,
 	/* Create input device into input sub-system */
 	write(gpad->fd, &uinp, sizeof(uinp));
 	if (ioctl(gpad->fd, UI_DEV_CREATE)) {
-		printf("[uinput_gamepad] Unable to create UINPUT device.");
+		printf("[uinput_gamepad] Unable to create UINPUT device.\n");
 		return -1;
 	}
 

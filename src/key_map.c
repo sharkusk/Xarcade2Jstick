@@ -21,7 +21,7 @@
 #include <stdint.h>
 #include "key_map.h"
 
-void set_keymap(key_map_t key_map[], uint8_t key, enum dest_type destination, int game_pad_index, uint16_t code, uint16_t value_low, uint16_t value_high, uint16_t evtype, uint8_t hot_key)
+void set_keymap(key_map_t key_map[], uint8_t key, enum dest_type destination, int game_pad_index, uint16_t code, uint16_t value_low, uint16_t value_high, uint16_t evtype, uint8_t shift_code)
 {
     key_map[key].destination = destination;
     key_map[key].game_pad_index = game_pad_index;
@@ -29,13 +29,13 @@ void set_keymap(key_map_t key_map[], uint8_t key, enum dest_type destination, in
     key_map[key].value_high = value_high;
     key_map[key].value_low = value_low;
     key_map[key].evtype = evtype;
-    key_map[key].hot_key = hot_key;
+    key_map[key].shift_code = shift_code;
 }
 
-void initialize_default_keymap(key_map_t key_map[], key_map_t hotkey_map[])
+void initialize_default_keymap(key_map_t key_map[], key_map_t shiftkey_map[])
 {
 	memset(key_map, 0, sizeof(key_map_t)*KEY_MAP_SIZE);
-	memset(hotkey_map, 0, sizeof(key_map_t)*KEY_MAP_SIZE);
+	memset(shiftkey_map, 0, sizeof(key_map_t)*KEY_MAP_SIZE);
 
 	/* Player 1 */
     set_keymap(key_map, KEY_LEFTCTRL, game_pad, 0, BTN_WEST, 0, 1, EV_KEY, 0);
@@ -79,20 +79,23 @@ void initialize_default_keymap(key_map_t key_map[], key_map_t hotkey_map[])
 	set_keymap(key_map, KEY_F, game_pad, 1, ABS_Y, 2, 4, EV_ABS, 0);
 
 	/* Hotkeys */
-	set_keymap(hotkey_map, KEY_1, keyboard, 0, KEY_TAB, 0, 1, EV_KEY, KEY_5);
-	set_keymap(hotkey_map, KEY_2, keyboard, 0, KEY_ESC, 0, 1, EV_KEY, KEY_6);
+	set_keymap(shiftkey_map, KEY_5, keyboard, 0, KEY_TAB, 0, 1, EV_KEY, KEY_1);
+	set_keymap(shiftkey_map, KEY_6, keyboard, 0, KEY_ESC, 0, 1, EV_KEY, KEY_2);
 }
 
-void initialize_hotkeys(key_map_t key_map[], key_map_t hotkey_map[])
+void initialize_shiftkeys(key_map_t key_map[], key_map_t shiftkey_map[])
 {
     int i = 0;
 	/* 
-	   We only require the user to program the hotkey info in one place,
+	   We only require the user to program the shiftkey info in one place,
 	   but we want the tables to be consistent so fill this in ourselves.
 	*/
 	for (i=0; i<KEY_MAP_SIZE; i++) {
-		if (hotkey_map[i].hot_key != 0) {
-			key_map[i].hot_key = 1;
+		if (shiftkey_map[i].shift_code != 0) {
+            /* Shifted keys have the value of the associated shift key */
+			key_map[i].shift_code = shiftkey_map[i].shift_code; 
+            /* Shift keys have value of 1 */
+			key_map[shiftkey_map[i].shift_code].shift_code = 1;
 		}
 		if (key_map[i].destination == pass_through) {
 			key_map[i].code = i;
