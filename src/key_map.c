@@ -20,6 +20,7 @@
 #include <linux/input.h>
 #include <stdint.h>
 #include "key_map.h"
+#include "input_event_code_array.h"
 
 void set_keymap(key_map_t key_map[], uint8_t key, enum dest_type destination, int game_pad_index, uint16_t code, uint16_t value_low, uint16_t value_high, uint16_t evtype, uint8_t shift_code)
 {
@@ -102,5 +103,21 @@ void initialize_shiftkeys(key_map_t key_map[], key_map_t shiftkey_map[])
 			key_map[i].evtype = EV_KEY;
 		}
 	}
+}
+
+int name_to_code(const char *name, uint16_t *p_code)
+{
+    int result = -1;
+    int i = 0;
+
+    while( ieca[i].code != 0xFFFF ) {
+        if (strcmp(name, ieca[i].name) == 0) {
+            *p_code = ieca[i].code;
+            result = 0;
+            break;
+        }
+        i++;
+    }
+    return result;
 }
 
