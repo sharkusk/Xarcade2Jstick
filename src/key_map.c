@@ -121,3 +121,19 @@ int name_to_code(const char *name, uint16_t *p_code)
     return result;
 }
 
+int name_to_dest(const char *name, uint16_t *p_code)
+{
+    int result = -1;
+    int i = 0;
+
+    while( ieca[i].code != 0xFFFF ) {
+        if (strcmp(name, ieca[i].name) == 0) {
+            *p_code = ieca[i].code;
+            result = 0;
+            break;
+        }
+        i++;
+    }
+    return result;
+}
+

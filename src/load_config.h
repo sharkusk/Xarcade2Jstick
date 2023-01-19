@@ -15,36 +15,20 @@
 /* ======================================================================== */
 /*                           (c) 2023, Sharkus                              */
 /* ======================================================================== */
+#ifndef LOAD_CONFIG_H
+#define LOAD_CONFIG_H
 
-#ifndef KEY_MAP_H
-#define KEY_MAP_H
+#include "key_map.h"
 
-#include <stdint.h>
+#define MAX_DEVICE_PATH_SIZE 256
 
-typedef struct key_map_t {
-	/* char key, -- defined by position in key_map table */
-	enum dest_type { pass_through, keyboard, game_pad } destination;
-	int game_pad_index; /* ignored for keyboard destination */
-	uint16_t code;		/* code we are going to send*/
-	uint16_t value_low; /* value to send when ev == 0 */
-	uint16_t value_high;/* value to send when ev > 0 */
-	uint16_t evtype;    /* type of event to send */
+struct k2j_config {
+    char device_path[MAX_DEVICE_PATH_SIZE];
+    int num_virtual_game_pads;
+    key_map_t key_map[KEY_MAP_SIZE];
+    key_map_t shiftkey_map[KEY_MAP_SIZE];
+};
 
-	/* In the main key map shift_code will be a 0 for normal key,
-	   and a 1 for a shift_code.  This will autofill based on the shift_code map.
+int load_config(const char *config_path, struct k2j_config *p_config);
 
-	   In the shiftkey map, this will be the keycode for the associated
-	   shift_key that must be already pressed for the code to be sent.
-	*/
-	uint16_t shift_code; 
-} key_map_t;
-
-# define KEY_MAP_SIZE 256
-
-void set_keymap(key_map_t key_map[], uint8_t key, enum dest_type destination, int game_pad_index, uint16_t code, uint16_t value_low, uint16_t value_high, uint16_t evtype, uint8_t shift_code);
-void initialize_default_keymap(key_map_t key_map[], key_map_t shiftkey_map[]);
-void initialize_shiftkeys(key_map_t key_map[], key_map_t shiftkey_map[]);
-
-int name_to_code(const char *name, uint16_t *p_code);
-
-#endif /* KEY_MAP_H */
+#endif

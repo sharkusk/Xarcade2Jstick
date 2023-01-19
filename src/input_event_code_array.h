@@ -25,6 +25,6 @@ struct input_mapping {
     uint16_t code;
 };
 
-extern struct input_mapping ieca[];
+extern const struct input_mapping ieca[];
 
 #endif
