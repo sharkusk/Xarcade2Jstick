@@ -1,0 +1,107 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc-10",
+      "-c",
+      "-Wall",
+      "-O3",
+      "-c",
+      "-o",
+      "../build/input_xarcade.o",
+      "input_xarcade.c"
+    ],
+    "directory": "/home/marcusk/Source/Xarcade2Jstick/src",
+    "file": "/home/marcusk/Source/Xarcade2Jstick/src/input_xarcade.c",
+    "output": "/home/marcusk/Source/Xarcade2Jstick/src/../build/input_xarcade.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc-10",
+      "-c",
+      "-Wall",
+      "-O3",
+      "-c",
+      "-o",
+      "../build/main.o",
+      "main.c"
+    ],
+    "directory": "/home/marcusk/Source/Xarcade2Jstick/src",
+    "file": "/home/marcusk/Source/Xarcade2Jstick/src/main.c",
+    "output": "/home/marcusk/Source/Xarcade2Jstick/src/../build/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc-10",
+      "-c",
+      "-Wall",
+      "-O3",
+      "-c",
+      "-o",
+      "../build/input_event_code_array.o",
+      "input_event_code_array.c"
+    ],
+    "directory": "/home/marcusk/Source/Xarcade2Jstick/src",
+    "file": "/home/marcusk/Source/Xarcade2Jstick/src/input_event_code_array.c",
+    "output": "/home/marcusk/Source/Xarcade2Jstick/src/../build/input_event_code_array.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc-10",
+      "-c",
+      "-Wall",
+      "-O3",
+      "-c",
+      "-o",
+      "../build/uinput_kbd.o",
+      "uinput_kbd.c"
+    ],
+    "directory": "/home/marcusk/Source/Xarcade2Jstick/src",
+    "file": "/home/marcusk/Source/Xarcade2Jstick/src/uinput_kbd.c",
+    "output": "/home/marcusk/Source/Xarcade2Jstick/src/../build/uinput_kbd.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc-10",
+      "-c",
+      "-Wall",
+      "-O3",
+      "-c",
+      "-o",
+      "../build/key_map.o",
+      "key_map.c"
+    ],
+    "directory": "/home/marcusk/Source/Xarcade2Jstick/src",
+    "file": "/home/marcusk/Source/Xarcade2Jstick/src/key_map.c",
+    "output": "/home/marcusk/Source/Xarcade2Jstick/src/../build/key_map.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc-10",
+      "-c",
+      "-Wall",
+      "-O3",
+      "-c",
+      "-o",
+      "../build/uinput_gamepad.o",
+      "uinput_gamepad.c"
+    ],
+    "directory": "/home/marcusk/Source/Xarcade2Jstick/src",
+    "file": "/home/marcusk/Source/Xarcade2Jstick/src/uinput_gamepad.c",
+    "output": "/home/marcusk/Source/Xarcade2Jstick/src/../build/uinput_gamepad.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc-10",
+      "-c",
+      "-Wall",
+      "-O3",
+      "-c",
+      "-o",
+      "../build/load_config.o",
+      "load_config.c"
+    ],
+    "directory": "/home/marcusk/Source/Xarcade2Jstick/src",
+    "file": "/home/marcusk/Source/Xarcade2Jstick/src/load_config.c",
+    "output": "/home/marcusk/Source/Xarcade2Jstick/src/../build/load_config.o"
+  }
+]
